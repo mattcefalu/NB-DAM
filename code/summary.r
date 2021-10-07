@@ -2,7 +2,15 @@ library(rstan)
 library(data.table)
 library(ggplot2)
 
-res = readRDS("results/stan_fits/final_model.RDS")
+# which outcome -- Total.Firearm.Deaths, Firearm.Suicides, or Firearm.Homicides
+outcome = "Total.Firearm.Deaths"
+
+# locations to save files
+results.folder = paste0("results/",outcome,"/")
+figures.folder = paste0("figures/",outcome,"/")
+
+# load model fit
+res = readRDS(paste0("results/stan_fits/final_model_",outcome,".RDS"))
 m = res$m
 law.names = res$law.names
 X.names = res$X.names
@@ -19,15 +27,15 @@ rownames(post.summary)[grepl("^gamma_X",rownames(post.summary))] = X.names
 rownames(post.summary)[grepl("beta",rownames(post.summary))] = law.names
 
 # convert time and X effects back
-post.summary[X.names,1:8] = post.summary[X.names,1:8]/100
-post.summary[grepl("zeta",rownames(post.summary)),1:8] = post.summary[grepl("zeta",rownames(post.summary)),1:8]/100
+post.summary[X.names,1:8] = post.summary[X.names,1:8]
+post.summary[grepl("zeta",rownames(post.summary)),1:8] = post.summary[grepl("zeta",rownames(post.summary)),1:8]
 
 # some rounding
 post.summary = round(post.summary,4)
 post.summary[,"n_eff"] = round(post.summary[,"n_eff"],0)
 
 # drop some rows/columns
-write.csv(post.summary[,-2],file="results/mcmc_summary.csv")
+write.csv(post.summary[,-2],file=paste0(results.folder,"mcmc_summary.csv"))
 
 # law combinations
 
@@ -94,78 +102,78 @@ ylims = c(0.6,1.2)
 combine(mcmc=mcmc , 
         P1.names=c("CAP","BCps","BCds","ma18po","ma20ps","WP24p","WP7d") ,
         P0.names=c("SYG","CCW","PC") ,
-        file.table = "results/most_restrictive.csv" , 
-        file.figure = "figures/most_restrictive.pdf",
+        file.table = paste0(results.folder,"most_restrictive.csv") , 
+        file.figure = paste0(figures.folder,"most_restrictive.pdf"),
         ylim=ylims)
 
 # restricting use and storage
 combine(mcmc=mcmc , 
         P1.names=c("CAP") , 
         P0.names=c("SYG","CCW","PC"),
-        file.table = "results/use_and_storage.csv" , 
-        file.figure = "figures/use_and_storage.pdf",
+        file.table = paste0(results.folder,"use_and_storage.csv") , 
+        file.figure = paste0(figures.folder,"use_and_storage.pdf"),
         ylim=ylims)
 
 # restricting who can have a firearm
 combine(mcmc=mcmc , 
         P1.names=c("BCps","BCds","ma18po","ma20ps","WP24p","WP7d") , 
         P0.names=c("NULL"),
-        file.table = "results/restricting_who.csv" , 
-        file.figure = "figures/restricting_who.pdf",
+        file.table = paste0(results.folder,"restricting_who.csv") , 
+        file.figure = paste0(figures.folder,"restricting_who.pdf"),
         ylim=ylims)
 
 # federal laws in 1994
 combine(mcmc=mcmc , 
         P1.names=c("BCds","ma18po","WP24p","WP7d") , 
         P0.names=c("NULL"),
-        file.table = "results/federal_1994.csv" , 
-        file.figure = "figures/federal_1994.pdf",
+        file.table = paste0(results.folder,"federal_1994.csv") , 
+        file.figure = paste0(figures.folder,"federal_1994.pdf"),
         ylim=ylims)
 
 # background checks
 combine(mcmc=mcmc , 
         P1.names=c("BCps","BCds") , 
         P0.names=c("NULL"),
-        file.table = "results/background_checks.csv" , 
-        file.figure = "figures/background_checks.pdf",
+        file.table = paste0(results.folder,"background_checks.csv") , 
+        file.figure = paste0(figures.folder,"background_checks.pdf"),
         ylim=ylims)
 
 # age restrictions
 combine(mcmc=mcmc , 
         P1.names=c("ma18po","ma20ps") , 
         P0.names=c("NULL"),
-        file.table = "results/age_restrictions.csv" , 
-        file.figure = "figures/age_restrictions.pdf",
+        file.table = paste0(results.folder,"age_restrictions.csv") , 
+        file.figure = paste0(figures.folder,"age_restrictions.pdf"),
         ylim=ylims)
 
 # waiting periods
 combine(mcmc=mcmc , 
         P1.names=c("WP24p","WP7d") , 
         P0.names=c("NULL"),
-        file.table = "results/waiting_periods.csv" , 
-        file.figure = "figures/waiting_periods.pdf",
+        file.table = paste0(results.folder,"waiting_periods.csv") , 
+        file.figure = paste0(figures.folder,"waiting_periods.pdf"),
         ylim=ylims)
 
 # conceal carry
 combine(mcmc=mcmc , 
         P1.names=c("CCW","PC") , 
         P0.names=c("NULL"),
-        file.table = "results/conceal_carry.csv" , 
-        file.figure = "figures/conceal_carry.pdf",
+        file.table = paste0(results.folder,"conceal_carry.csv") , 
+        file.figure = paste0(figures.folder,"conceal_carry.pdf"),
         ylim=ylims)
 
 # CAP
 combine(mcmc=mcmc , 
         P1.names=c("CAP") , 
         P0.names=c("NULL"),
-        file.table = "results/CAP.csv" , 
-        file.figure = "figures/CAP.pdf",
+        file.table = paste0(results.folder,"CAP.csv") , 
+        file.figure = paste0(figures.folder,"CAP.pdf"),
         ylim=ylims)
 
 # SYG
 combine(mcmc=mcmc , 
         P1.names=c("SYG") , 
         P0.names=c("NULL"),
-        file.table = "results/SYG.csv" , 
-        file.figure = "figures/SYG.pdf",
+        file.table = paste0(results.folder,"SYG.csv") , 
+        file.figure = paste0(figures.folder,"SYG.pdf"),
         ylim=ylims)

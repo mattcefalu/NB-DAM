@@ -3,12 +3,19 @@ library(data.table)
 library(rstan)
 options(mc.cores=parallel::detectCores())
 
-# which outcome
+# which outcome -- Total.Firearm.Deaths, Firearm.Suicides, or Firearm.Homicides
 outcome = "Total.Firearm.Deaths"
+
+# prior SD for policy effects
+if (outcome%in%c("Total.Firearm.Deaths","Firearm.Homicides")){
+  prior = 0.1/sqrt(2)
+}else{
+  prior = 0.09/sqrt(2)
+}
+
 
 # drop a few of the covariates
 drop = c( "Percent.No.high.school.diploma" ,"Percent.Some.college","Police.Rate.L5") 
-
 
 # which covariate set
 j=4
@@ -85,7 +92,8 @@ stan.model = stan_model(file = file)
 
 # find posterior mode to use as initial values
 bb= optimizing(stan.model , data=stan.list)
-init = list(delta1=bb$par["delta1"] , delta2=bb$par["delta2"] , 
+init = list(alpha=bb$par["alpha"],
+            delta1=bb$par["delta1"] , delta2=bb$par["delta2"] , 
             gamma_X=bb$par[grepl("gamma_X",names(bb$par))] , 
             gamma_U=bb$par[grepl("gamma_U",names(bb$par))] , 
             zeta=bb$par[grepl("zeta",names(bb$par))] , 
@@ -104,6 +112,6 @@ m_stan <- stan(file = file,
 out = list(m=m_stan,law.names=list.of.laws,X.names=X.names,U.names=U.names)
 
 # save results
-saveRDS(out,file="results/stan_fits/final_model.RDS")
+saveRDS(out,file=paste0("results/stan_fits/final_model_",outcome,".RDS"))
 
 
