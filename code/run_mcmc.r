@@ -1,10 +1,3 @@
-rm(list=ls())
-library(data.table)
-library(rstan)
-options(mc.cores=parallel::detectCores())
-
-# which outcome -- Total.Firearm.Deaths, Firearm.Suicides, or Firearm.Homicides
-outcome = "Total.Firearm.Deaths"
 
 # prior SD for policy effects
 if (outcome%in%c("Total.Firearm.Deaths","Firearm.Homicides")){
@@ -12,7 +5,6 @@ if (outcome%in%c("Total.Firearm.Deaths","Firearm.Homicides")){
 }else{
   prior = 0.09/sqrt(2)
 }
-
 
 # drop a few of the covariates
 drop = c( "Percent.No.high.school.diploma" ,"Percent.Some.college","Police.Rate.L5") 

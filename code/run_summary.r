@@ -1,10 +1,3 @@
-library(rstan)
-library(data.table)
-library(ggplot2)
-
-# which outcome -- Total.Firearm.Deaths, Firearm.Suicides, or Firearm.Homicides
-outcome = "Total.Firearm.Deaths"
-
 # locations to save files
 results.folder = paste0("results/",outcome,"/")
 figures.folder = paste0("figures/",outcome,"/")
