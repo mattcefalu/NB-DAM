@@ -15,9 +15,6 @@ j=4
 # loads function that preps outcomes and laws
 source("code/data_prep_outcomes_and_laws.r")
 
-# the list of law names 
-law.names = c("CAP","SYG","CCW.SI","PC","BCps","BCds","ma18poss","ma20ps","WP24p","WP7d")
-
 # run the data prep
 dta=data_prep(file=paste0("data/firearm.model.data",j,".2019.Rdata") , law.names = law.names)
 
@@ -37,6 +34,10 @@ dta = as.data.frame(dta)
 Y = dta[,outcome]
 L_1 = log(dta[,paste0(outcome,"_1")])
 L_2 = log(dta[,paste0(outcome,"_2")])
+
+# correct an zero counts when taking log
+L_1[L_1==-Inf] = log(0.5)
+L_2[L_2==-Inf] = log(0.5)
 
 # extract covariate sets
 X = dta[,X.names]
@@ -75,7 +76,8 @@ stan.list = list(y=Y , l_1=L_1 , l_2=L_2 ,
                  X=X , U=U , S=S,
                  T=Time , T_1 = Time_1, T_2 = Time_2,
                  P=P , P_1=P_1 , P_2=P_2,
-                 N=N , KX=KX , KU=KU , KT=KT , KS=KS , KP=KP)
+                 N=N , KX=KX , KU=KU , KT=KT , KS=KS , KP=KP , 
+                 prior=prior)
 
 
 #  load the stan model

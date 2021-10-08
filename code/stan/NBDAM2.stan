@@ -26,6 +26,8 @@ data {
   matrix[N,KT] T_2;   // time effects matrix, lag 2
   
   int S[N]; // the state -- not used
+  
+  real prior; // the prior SD of policy effects
 }
 parameters {
   real alpha;  // intercept
@@ -62,7 +64,7 @@ model {
   delta2 ~ normal(0,1); 
 
   // priors for policy effects 
-  beta ~ normal(0 , 0.071); 
+  beta ~ normal(0 , prior); 
   
   // priors for covaraites X
   gamma_X ~ normal(0,0.1);  
