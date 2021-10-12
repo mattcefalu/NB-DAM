@@ -17,14 +17,10 @@ rm(res)
 
 
 # full summary of posterior
-post.summary = summary(m)$summary
+post.summary = summary(m , pars=grep("log_mu|log_lik", names(extract(m)) , value = T , invert = T) , use_cache=F)$summary
 rownames(post.summary)[grepl("^gamma_U",rownames(post.summary))] = U.names
 rownames(post.summary)[grepl("^gamma_X",rownames(post.summary))] = X.names
 rownames(post.summary)[grepl("beta",rownames(post.summary))] = P.names
-
-# convert time and X effects back
-post.summary[X.names,1:8] = post.summary[X.names,1:8]
-post.summary[grepl("zeta",rownames(post.summary)),1:8] = post.summary[grepl("zeta",rownames(post.summary)),1:8]
 
 # some rounding
 post.summary = round(post.summary,4)

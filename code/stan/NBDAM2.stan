@@ -46,7 +46,9 @@ parameters {
 }
 transformed parameters {
     real phi;
+    vector[N] log_mu;
     phi = 1.0 / invphi;
+    log_mu = alpha + ( l_1 - offset_1 - P_1*beta)*delta1 + ( l_2 - offset_2 - P_2*beta)*delta2 + P*beta + T*zeta + X*gamma_X + U*gamma_U + offset;
 }
 model {  
   // prior for intercept -- noninformative
@@ -70,5 +72,11 @@ model {
   gamma_X ~ normal(0,0.1);  
   zeta ~ normal(0,.2); 
   
-  y ~ neg_binomial_2_log( alpha + ( l_1 - offset_1 - P_1*beta)*delta1 + ( l_2 - offset_2 - P_2*beta)*delta2 + P*beta + T*zeta + X*gamma_X + U*gamma_U + offset, phi);
+  y ~ neg_binomial_2_log( log_mu, phi);
+}
+generated quantities {
+  vector[N] log_lik;
+  for (n in 1:N) {
+    log_lik[n] = neg_binomial_2_log_lpmf(y[n] |  log_mu[n], phi);
+  }
 }

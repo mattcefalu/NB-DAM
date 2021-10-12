@@ -109,3 +109,8 @@ out = list(m=m_stan,law.names=list.of.laws,X.names=X.names,U.names=U.names)
 saveRDS(out,file=paste0("results/stan_fits/final_model_",outcome,".RDS"))
 
 
+# fit summaries
+r2 = cor( Y/exp(offset) , apply(exp(extract(m_stan,"log_mu")$log_mu),2,median)/exp(offset))^2
+loo1 =loo(m_stan)
+saveRDS(c(p_eff=loo1$estimates[2,1] , loo=loo1$estimates[3,1] , r2=r2),file=paste0("results/stan_fits/final_model_",outcome,"_stats.RDS"))
+
