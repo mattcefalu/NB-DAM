@@ -28,6 +28,7 @@ data {
   int S[N]; // the state -- not used
   
   real prior; // the prior SD of policy effects
+  real prior_multiplier; // a multiplier to apply to the SD of all priors
 }
 parameters {
   real alpha;  // intercept
@@ -52,24 +53,24 @@ transformed parameters {
 }
 model {  
   // prior for intercept -- noninformative
-  alpha ~ normal(0,sqrt(10));
+  alpha ~ normal(0,prior_multiplier*sqrt(10));
   
   // lasso prior for covariate set U
   gamma_U ~ double_exponential(0, tau);
-  tau ~ cauchy(0, 1);
+  tau ~ cauchy(0, prior_multiplier*1);
   
   // prior for NB dispersion
-  invphi ~ normal(0, 0.1);
+  invphi ~ normal(0, prior_multiplier*0.1);
 
   // priors for ar coefficients
-  delta1 ~ normal(.5,1); 
-  delta2 ~ normal(0,1); 
+  delta1 ~ normal(.5,prior_multiplier*1); 
+  delta2 ~ normal(0,prior_multiplier*1); 
 
   // priors for policy effects 
-  beta ~ normal(0 , prior); 
+  beta ~ normal(0 , prior_multiplier*prior); 
   
   // priors for covaraites X
-  gamma_X ~ normal(0,0.1);  
+  gamma_X ~ normal(0,prior_multiplier*0.1);  
   zeta ~ normal(0,.2); 
   
   y ~ neg_binomial_2_log( log_mu, phi);

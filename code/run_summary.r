@@ -3,12 +3,14 @@ source("code/combine.r")
 
 # locations to save files
 results.folder = paste0("results/",outcome,"/")
-figures.folder = paste0("figures/",outcome,"/")
+figures.folder = paste0("figures/",outcome,"/", ifelse(loosen_prior , "loosen_prior/" , ""),ifelse(!distractor , "no_distractor/" , ""))
 
 ylims = c(0.6,1.4)
 
 # load model fit
-res = readRDS(paste0("results/stan_fits/final_model_",outcome,".RDS"))
+res = readRDS(paste0("results/stan_fits/",
+                     ifelse(loosen_prior , "loosen_prior/" , ""),
+                     ifelse(!distractor , "no_distractor/" , ""),"final_model_",outcome,".RDS"))
 m = res$m
 P.names = res$law.names
 X.names = res$X.names
@@ -27,7 +29,11 @@ post.summary = round(post.summary,4)
 post.summary[,"n_eff"] = round(post.summary[,"n_eff"],0)
 
 # drop some rows/columns
-write_xlsx(as.data.frame(post.summary[,-2]),path=paste0(results.folder,"mcmc_coef_summary_",outcome,".xlsx"))
+d.out = as.data.frame(post.summary[,-2])
+d.out <- cbind(" "=rownames(d.out), d.out)
+
+write_xlsx(d.out,path=paste0(results.folder,"mcmc_coef_summary_",outcome,
+                                                        ifelse(loosen_prior , "_loosen_prior" , ""),ifelse(!distractor , "_no_distractor" , ""),".xlsx"))
 
 # extract mcmc
 mcmc = extract(m , "beta")$beta
@@ -105,6 +111,7 @@ for (law in names(out)){
   results = rbind( results , cbind(law=law , out[[law]]$res) )
 }
 
-write_xlsx(results , path=paste0(results.folder,outcome,".xlsx"))
+write_xlsx(results , path=paste0(results.folder,outcome, 
+                                 ifelse(loosen_prior , "_loosen_prior" , ""),ifelse(!distractor , "_no_distractor" , ""),".xlsx"))
 
 

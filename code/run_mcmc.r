@@ -6,6 +6,13 @@ if (outcome%in%c("Total.Firearm.Deaths","Firearm.Homicides")){
   prior = 0.09/sqrt(2)
 }
 
+# prior multiplier
+if (loosen_prior){
+  prior_multiplier = 10
+}else{
+  prior_multiplier = 1
+}
+
 # drop a few of the covariates
 drop = c( "Percent.No.high.school.diploma" ,"Percent.Some.college","Police.Rate.L5") 
 
@@ -57,7 +64,13 @@ Time_2 = cbind(0,Time_1[,-ncol(Time_1)])
 S = as.numeric(as.factor(dta$State))
 
 # law matrix
-list.of.laws = c(paste0("levels.coding.instant.",law.names),paste0("levels.coding.slow.",law.names),paste0("levels.coding.slow.lagged.",law.names))
+list.of.laws = c(paste0("levels.coding.instant.",law.names),paste0("levels.coding.slow.",law.names))
+
+# include the distractor terms?
+if (distractor){
+  list.of.laws = c(list.of.laws , paste0("levels.coding.slow.lagged.",law.names))
+}
+
 P = dta[,list.of.laws]
 P_1 = dta[,paste0(list.of.laws,"_1")]
 P_2 = dta[,paste0(list.of.laws,"_2")]
@@ -77,7 +90,8 @@ stan.list = list(y=Y , l_1=L_1 , l_2=L_2 ,
                  T=Time , T_1 = Time_1, T_2 = Time_2,
                  P=P , P_1=P_1 , P_2=P_2,
                  N=N , KX=KX , KU=KU , KT=KT , KS=KS , KP=KP , 
-                 prior=prior)
+                 prior=prior , 
+                 prior_multiplier=prior_multiplier)
 
 
 #  load the stan model
@@ -102,15 +116,17 @@ m_stan <- stan(file = file,
                data = stan.list ,
                init = init,
                iter=10000 , 
+               seed=seed ,
                control = list(max_treedepth = 14 , adapt_delta=0.9))
 out = list(m=m_stan,law.names=list.of.laws,X.names=X.names,U.names=U.names)
 
 # save results
-saveRDS(out,file=paste0("results/stan_fits/final_model_",outcome,".RDS"))
+res.directory = paste0("results/stan_fits/",ifelse(loosen_prior , "loosen_prior/" , ""),ifelse(!distractor , "no_distractor/" , ""))
+saveRDS(out,file=paste0(res.directory,"final_model_",outcome,".RDS"))
 
 
 # fit summaries
 r2 = cor( Y/exp(offset) , apply(exp(extract(m_stan,"log_mu")$log_mu),2,median)/exp(offset))^2
 loo1 =loo(m_stan)
-saveRDS(c(p_eff=loo1$estimates[2,1] , loo=loo1$estimates[3,1] , r2=r2),file=paste0("results/stan_fits/final_model_",outcome,"_stats.RDS"))
+saveRDS(c(p_eff=loo1$estimates[2,1] , loo=loo1$estimates[3,1] , r2=r2),file=paste0(res.directory,"final_model_",outcome,"_stats.RDS"))
 
