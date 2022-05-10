@@ -40,7 +40,7 @@ combine = function(mcmc , P1.names , P0.names , P.names , file.table , file.figu
                      d )
   
   # 100 draws of the mcmc
-  tmp = res[ seq(1,nrow(res),length.out=500), ]
+  tmp = res[ seq(1,nrow(res),length.out=100), ]
   colnames(tmp) = paste0("Year",0:6)
   tmp = reshape(data.frame(tmp) , direction="long" , varying=paste0("Year",0:6),sep="",times = 0:6 , timevar="Year" , v.names="est")
   

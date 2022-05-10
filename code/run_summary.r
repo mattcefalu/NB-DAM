@@ -105,6 +105,7 @@ for (law in law.names){
                                 ylim=ylims)
 }
 
+
 # create on big output table
 results = NULL
 for (law in names(out)){

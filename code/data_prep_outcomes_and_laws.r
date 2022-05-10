@@ -1,26 +1,33 @@
 data_prep = function(file,law.names){
   
   # coding of laws
-  d1 = read.csv(file="data/CAPSYGSI_laws_03052021.csv")
-  d2 = read.csv(file="data/BCMAWP_laws_03052021.csv")
-  d3 = read.csv(file="data/PC_laws_09162021.csv")
+  d1 = read.csv(file="data/CAPSYGSI_laws_12072021_exp2019.csv")
+  d2 = read.csv(file="data/BCMAWP_laws_12132021_exp2019.csv")
+  d3 = read.csv(file="data/PC_laws_12072021.csv")
   
   laws=merge(d1,d2,by=c("State","Year"))
   laws=merge(laws,d3 , by=c("State","Year"))
   rm(d1,d2,d3)
   
   # lagged coding of laws
-  d1 = read.csv(file="data/BCMAWP_laws_10012021_lagged.csv")
-  d2 = read.csv(file="data/RTCCAPSYG_laws_10012021_lagged.csv")
-  d3 = read.csv(file="data/PC_laws_10012021_lagged.csv")
+  d1 = read.csv(file="data/BCMAWP_laws_12132021_lagged.csv")
+  d2 = read.csv(file="data/RTCCAPSYG_laws_12072021_lagged.csv")
+  d3 = read.csv(file="data/PC_laws_12072021_lagged.csv")
+  
+  # drop unused column
+  d1 = d1[,!colnames(d1) %in% c("levels.coding.slow.BCds","levels.coding.instant.BCds")]
   
   lagged.laws=merge(d1,d2,by=c("State","Year"))
   lagged.laws=merge(lagged.laws,d3 , by=c("State","Year"))
   rm(d1,d2,d3)
   
+  # recode AZ for WP
   setDT(laws)
   setkey(laws , State , Year)
   
+  laws[ State=="Arizona" & Year== 1994 , levels.coding.instant.WP7d := 9/12]
+  laws[ State=="Arizona" & Year== 1994 , levels.coding.slow.WP7d := 113/120/12]
+  laws[ State=="Arizona" & Year== 1995 , levels.coding.slow.WP7d := 49/120/12]
   
   laws[ , (paste0("levels.coding.slow.",law.names,"_1")) := lapply(.SD,data.table::shift , n = 1 , type = "lag") , by=.(State) , .SDcols=paste0("levels.coding.slow.",law.names)]
   laws[ , (paste0("ch.levels.coding.slow.",law.names,"_1")) := lapply(.SD,data.table::shift , n = 1 , type = "lag") , by=.(State) , .SDcols=paste0("ch.levels.coding.slow.",law.names)]
@@ -37,6 +44,9 @@ data_prep = function(file,law.names){
   setDT(lagged.laws)
   setkey(lagged.laws , State , Year)
   setnames(lagged.laws , old = paste0("levels.coding.slow.",law.names,".lag") , new=paste0("levels.coding.slow.lagged.",law.names))
+  
+  lagged.laws[ State=="Arizona" & Year== 1999 , levels.coding.slow.lagged.WP7d := 113/120/12]
+  lagged.laws[ State=="Arizona" & Year== 2000 , levels.coding.slow.lagged.WP7d := 49/120/12]
   
   lagged.laws[ , (paste0("levels.coding.slow.lagged.",law.names,"_1")) := lapply(.SD,data.table::shift , n = 1 , type = "lag") , by=.(State) , .SDcols=paste0("levels.coding.slow.lagged.",law.names)]
   lagged.laws[ , (paste0("levels.coding.slow.lagged.",law.names,"_2")) := lapply(.SD,data.table::shift , n = 2 , type = "lag") , by=.(State) , .SDcols=paste0("levels.coding.slow.lagged.",law.names)]
