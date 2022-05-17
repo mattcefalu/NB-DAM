@@ -5,7 +5,7 @@ source("code/combine.r")
 results.folder = paste0("results/",outcome,"/")
 figures.folder = paste0("figures/",outcome,"/", ifelse(loosen_prior , "loosen_prior/" , ""),ifelse(!distractor , "no_distractor/" , ""))
 
-ylims = c(0.6,1.4)
+ylims = c(0.59,1.41)
 
 # load model fit
 res = readRDS(paste0("results/stan_fits/",
@@ -102,7 +102,7 @@ for (law in law.names){
                                 P.names=P.names,
                                 file.table = paste0(results.folder,law,".csv") , 
                                 file.figure = paste0(figures.folder,law,".pdf"),
-                                ylim=ylims)
+                                ylim=c(0.8,1.2))
 }
 
 

@@ -71,7 +71,7 @@ model {
   
   // priors for covaraites X
   gamma_X ~ normal(0,prior_multiplier*0.1);  
-  zeta ~ normal(0,.2); 
+  zeta ~ normal(0,prior_multiplier*.2); 
   
   y ~ neg_binomial_2_log( log_mu, phi);
 }

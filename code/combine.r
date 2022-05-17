@@ -48,14 +48,16 @@ combine = function(mcmc , P1.names , P0.names , P.names , file.table , file.figu
   g = 
     
     ggplot(d.for.plot) + 
+    geom_hline(yintercept = 1 , color=rgb(0,0,0,.4) , size=0.75) +
     geom_line(data=tmp , aes(x=Year , y=est , group=id) , color=rgb(0,0.7,0.3 , 0.3)) +
     geom_line(aes(x=year,y=p50), size=0.75) + 
-    geom_line(aes(x=year,y=p025),linetype="dashed", size=0.75) + 
-    geom_line(aes(x=year,y=p975),linetype="dashed", size=0.75) + 
-    geom_line(aes(x=year,y=p10),linetype="dotted" , size=0.75) + 
-    geom_line(aes(x=year,y=p90),linetype="dotted" , size=0.75) + 
-    scale_y_continuous("Risk Ratio",limits=ylim , expand = c(0,0)) + 
+    #geom_line(aes(x=year,y=p025),linetype="dashed", size=0.75) + 
+    #geom_line(aes(x=year,y=p975),linetype="dashed", size=0.75) + 
+    geom_line(aes(x=year,y=p10),linetype="dashed" , size=0.75) + 
+    geom_line(aes(x=year,y=p90),linetype="dashed" , size=0.75) + 
+    scale_y_continuous("Risk Ratio" , expand = c(0,0)) + 
     scale_x_continuous("Years since implementation" , expand = c(0,0)) + 
+    coord_cartesian(ylim = ylim) +
     theme_bw() #+ 
     #theme(panel.ontop = TRUE,panel.background = element_rect(color = NA, fill = NA))
   
