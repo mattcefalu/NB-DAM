@@ -322,54 +322,54 @@ dev.off()
 # create single figure that holds the individual law effects
 a = ggarrange( 
   ggarrange(
-    plots$Total.Firearm.Deaths$CAP$g + 
+    plots$Total.Firearm.Deaths$CAP$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0.25,0) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Suicides$CAP$g + 
+    plots$Firearm.Suicides$CAP$g + coord_cartesian(ylim=c(0.79,1.21)) + 
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Homicides$CAP$g + 
+    plots$Firearm.Homicides$CAP$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.75,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   
   ggarrange(
-    plots$Total.Firearm.Deaths$conceal_carry$g + 
+    plots$Total.Firearm.Deaths$conceal_carry$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0.25,0) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Suicides$conceal_carry$g + 
+    plots$Firearm.Suicides$conceal_carry$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Homicides$conceal_carry$g + 
+    plots$Firearm.Homicides$conceal_carry$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.75,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   
   ggarrange(
-    plots$Total.Firearm.Deaths$SYG$g + 
+    plots$Total.Firearm.Deaths$SYG$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0.25,0) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Suicides$SYG$g + 
+    plots$Firearm.Suicides$SYG$g + coord_cartesian(ylim=c(0.79,1.21)) + 
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Homicides$SYG$g + 
+    plots$Firearm.Homicides$SYG$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.75,0,-0.25) , "lines")),
@@ -383,54 +383,54 @@ a = a + theme(plot.margin=unit(c(0,0,0,0) , "lines"))
 
 
 b = ggarrange( 
-  ggarrange(plots$Total.Firearm.Deaths$background_checks$g + 
+  ggarrange(plots$Total.Firearm.Deaths$background_checks$g + coord_cartesian(ylim=c(0.79,1.21)) +
               theme(axis.title=element_blank(),
                     plot.margin=unit(c(0.25,0.5,0.25,0) , "lines")),
             ncol=1,nrow=1,widths=c(6),align='h'),
   ggarrange(
-    plots$Firearm.Suicides$background_checks$g + 
+    plots$Firearm.Suicides$background_checks$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Homicides$background_checks$g + 
+    plots$Firearm.Homicides$background_checks$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.text.y =element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.75,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   
   ggarrange(
-    plots$Total.Firearm.Deaths$age_restrictions$g + 
+    plots$Total.Firearm.Deaths$age_restrictions$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0.25,0) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Suicides$age_restrictions$g + 
+    plots$Firearm.Suicides$age_restrictions$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Homicides$age_restrictions$g + 
+    plots$Firearm.Homicides$age_restrictions$g + coord_cartesian(ylim=c(0.79,1.21)) + 
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.75,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   
   ggarrange(
-    plots$Total.Firearm.Deaths$waiting_periods$g + 
+    plots$Total.Firearm.Deaths$waiting_periods$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0.25,0) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Suicides$waiting_periods$g + 
+    plots$Firearm.Suicides$waiting_periods$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.5,0,-0.25) , "lines")),
     ncol=1,nrow=1,widths=6,align='h'),
   ggarrange(
-    plots$Firearm.Homicides$waiting_periods$g + 
+    plots$Firearm.Homicides$waiting_periods$g + coord_cartesian(ylim=c(0.79,1.21)) +
       theme(axis.text.y=element_text(colour = "white"),
             axis.title=element_blank(),
             plot.margin=unit(c(0.25,0.75,0,-0.25) , "lines")),
