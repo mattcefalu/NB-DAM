@@ -29,6 +29,13 @@ data_prep = function(file,law.names){
   laws[ State=="Arizona" & Year== 1994 , levels.coding.slow.WP7d := 113/120/12]
   laws[ State=="Arizona" & Year== 1995 , levels.coding.slow.WP7d := 49/120/12]
   
+  # recode WPps for Illinois -- should have be on for full analytic window
+  laws[ State=="Illinois"  , levels.coding.slow.BCps := 1]
+  laws[ State=="Illinois"  , levels.coding.instant.BCps := 1]
+  laws[ State=="Illinois"  , ch.levels.coding.slow.BCps := 0]
+  laws[ State=="Illinois"  , ch.levels.coding.instant.BCps := 0]
+  laws[ State=="Illinois"  , levels.coding.slow.BCps.lag := 1]
+  
   laws[ , (paste0("levels.coding.slow.",law.names,"_1")) := lapply(.SD,data.table::shift , n = 1 , type = "lag") , by=.(State) , .SDcols=paste0("levels.coding.slow.",law.names)]
   laws[ , (paste0("ch.levels.coding.slow.",law.names,"_1")) := lapply(.SD,data.table::shift , n = 1 , type = "lag") , by=.(State) , .SDcols=paste0("ch.levels.coding.slow.",law.names)]
   
