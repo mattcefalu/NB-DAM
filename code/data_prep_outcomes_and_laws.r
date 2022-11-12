@@ -34,8 +34,7 @@ data_prep = function(file,law.names){
   laws[ State=="Illinois"  , levels.coding.instant.BCps := 1]
   laws[ State=="Illinois"  , ch.levels.coding.slow.BCps := 0]
   laws[ State=="Illinois"  , ch.levels.coding.instant.BCps := 0]
-  laws[ State=="Illinois"  , levels.coding.slow.BCps.lag := 1]
-  
+
   laws[ , (paste0("levels.coding.slow.",law.names,"_1")) := lapply(.SD,data.table::shift , n = 1 , type = "lag") , by=.(State) , .SDcols=paste0("levels.coding.slow.",law.names)]
   laws[ , (paste0("ch.levels.coding.slow.",law.names,"_1")) := lapply(.SD,data.table::shift , n = 1 , type = "lag") , by=.(State) , .SDcols=paste0("ch.levels.coding.slow.",law.names)]
   
@@ -52,8 +51,12 @@ data_prep = function(file,law.names){
   setkey(lagged.laws , State , Year)
   setnames(lagged.laws , old = paste0("levels.coding.slow.",law.names,".lag") , new=paste0("levels.coding.slow.lagged.",law.names))
   
+  # fix arizona
   lagged.laws[ State=="Arizona" & Year== 1999 , levels.coding.slow.lagged.WP7d := 113/120/12]
   lagged.laws[ State=="Arizona" & Year== 2000 , levels.coding.slow.lagged.WP7d := 49/120/12]
+  
+  # fix illinois
+  lagged.laws[ State=="Illinois"  , levels.coding.slow.lagged.BCps := 1]
   
   lagged.laws[ , (paste0("levels.coding.slow.lagged.",law.names,"_1")) := lapply(.SD,data.table::shift , n = 1 , type = "lag") , by=.(State) , .SDcols=paste0("levels.coding.slow.lagged.",law.names)]
   lagged.laws[ , (paste0("levels.coding.slow.lagged.",law.names,"_2")) := lapply(.SD,data.table::shift , n = 2 , type = "lag") , by=.(State) , .SDcols=paste0("levels.coding.slow.lagged.",law.names)]
